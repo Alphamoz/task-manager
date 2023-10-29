@@ -51,7 +51,7 @@
                 <div class="modal-footer">
                     <a type="button" class="btn btn-secondary cancel"
                         data-bs-dismiss="modal">Cancel</a>
-                    <form action="" method="GET">
+                    <form id='deleteForm' action="" method="POST">
                         @csrf
                         @method('DELETE')
                         <input type="submit" class="btn btn-primary confirm"></input>

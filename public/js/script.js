@@ -1,7 +1,7 @@
 var id = null
 var url = '/home/delete/'
 const myModal = document.querySelector('.modal')
-const deleteForm = document.querySelector('form')
+const deleteForm = document.querySelector('#deleteForm')
 // const deleteButtons = document.querySelectorAll('#deleteButton')
 function closeModal() {
     myModal.style.display = "none"
