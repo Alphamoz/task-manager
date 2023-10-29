@@ -10,15 +10,15 @@ class TaskManagerController extends Controller
     //
     function index(){
         // menampilkan list tugas diurut berdasar tanggal tugas
-        $task = Task::orderBy('created_at')->get()->groupBy('status_id');
+        $task = Task::with('image')->orderBy('created_at')->get();
         //menampilkan list tugas dikelompokkan berdasar status
+        $task = $task->groupBy('status_id');
         //mengurutkan list tugas status done berdasarkan tanggal terhapus
         $task=$task->sortBy('deleted_at');
         //setiap tugas ada link untuk update dan delete
-
         //list user
-        dd($task);
-        return view("home", ['data' => $task]);
+        // dd($task);
+        return view("home", ['datas' => $task]);
 
     }
     function newTask(){
