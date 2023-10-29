@@ -18,7 +18,7 @@ class TaskFactory extends Factory
     {
         return [
             'user_id' => fake()->numberBetween(2,20),
-            'image_id' => fake()->numberBetween(1,20),
+            'image_id' => fake()->numberBetween(1,10),
             'status_id' => fake()->numberBetween(1,3),
             'title' => fake()->text(20), // password
             'description' => fake()->text(400),
