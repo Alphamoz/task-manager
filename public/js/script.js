@@ -1,13 +1,17 @@
-var id = 0
+var id = null
+var url = '/home/delete/'
 const myModal = document.querySelector('.modal')
+const deleteForm = document.querySelector('form')
 // const deleteButtons = document.querySelectorAll('#deleteButton')
 function closeModal() {
     myModal.style.display = "none"
 }
-function openModal(idParam) {
-    // id = idParam
-    alert(idParam)
-    // myModal.style.display = "flex"
+function openModal(idData) {
+    id = idData
+    myModal.style.display = "flex"
+    deleteForm.setAttribute("action", url + id)
+    // console.log(url + id)
+    alert(deleteForm.getAttribute("action"))
 }
 // deleteButtons.forEach(element => {
 //     element.addEventListener('click', (e) => {
@@ -25,11 +29,11 @@ cancelButton.addEventListener('click', (e) => {
     closeModal();
 })
 
-confirmButton.addEventListener('click', (e) => {
-    // e.preventDefault()
-    window.location.href = `${url}?key1=value1&key2=value2`;
-    closeModal();
-})
+// confirmButton.addEventListener('click', (e) => {
+//     // e.preventDefault()
+//     // window.location.href = ``;
+//     closeModal();
+// })
 
 
 

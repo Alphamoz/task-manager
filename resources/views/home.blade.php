@@ -27,7 +27,7 @@
                                 <div class="text-center">
                                     <a href="{{ route('editTask', ['id' => $item->id]) }}" class="btn btn-primary">Edit</a>
                                     {{-- <a href="" id="deleteButton" class="btn btn-primary">Delete</a> --}}
-                                    <button type="button" class="btn btn-primary" onclick="openModal(0)">Delete</button>
+                                    <button type="button" class="btn btn-primary" onclick="openModal({{ $item->id }})">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -51,11 +51,16 @@
                 <div class="modal-footer">
                     <a type="button" class="btn btn-secondary cancel"
                         data-bs-dismiss="modal">Cancel</a>
-                    <a type="button" class="btn btn-primary confirm">Confirm</a>
+                    <form action="" method="GET">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" class="btn btn-primary confirm"></input>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-@endSection
+@endsection
+
 
 

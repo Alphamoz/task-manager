@@ -30,8 +30,8 @@ class TaskManagerController extends Controller
     function edit(){
 
     }
-    function done(){
-
+    function done($id){
+        return 'mantap jiwa id: '.$id;
     }
     // function destroy(){
 
