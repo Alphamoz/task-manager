@@ -6,6 +6,10 @@
 
 @extends('layout.mainLayout')
 
+@section('search')
+@parent
+@endsection
+
 @section('mainContent')
     <div class="text-center mt-3 mb-1 position-relative">
         <h3>Task List</h3>
