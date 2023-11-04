@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Task extends Model
 {
     use HasFactory;
+    protected $guarded = ['id', 'created_at', 'updated_at'];
+    // protected $fillable = ['user_id','image_id', 'title','description', 'status_id', 'published_at'];
     // primary key on other table
     // satu task punya satu image
     public function image(): BelongsTo{
