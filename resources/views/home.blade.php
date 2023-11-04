@@ -7,8 +7,9 @@
 @extends('layout.mainLayout')
 
 @section('mainContent')
-    <div class="text-center">
+    <div class="text-center mt-3 mb-1 position-relative">
         <h3>Task List</h3>
+        <a class="position-absolute btn btn-primary d-inline top-0 end-0 me-3" href="{{ route('newTask') }}" role="button">New Task</a>
     </div>
 
     <div>
@@ -60,6 +61,7 @@
             </div>
         </div>
     </div>
+
 @endsection
 
 

@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home');
+    redirect(route('homeScreen'));
 });
 Route::get('/home', [TaskManagerController::class, 'index'])->name('homeScreen');
 Route::get('/home/{id}', [TaskManagerController::class, 'show'])->name('editTask');
-Route::put('/home/{id}', [TaskManagerController::class, 'index'])->name('updateTask');
+Route::put('/home/{id}', [TaskManagerController::class, 'edit'])->name('updateTask');
 Route::get('/home/newTask', [TaskManagerController::class, 'newTask'])->name('newTask');
-Route::post('/home/newTask', [TaskManagerController::class, 'create'])->name('createTask');
+// Route::post('/home/newTask', [TaskManagerController::class, 'create'])->name('createTask');
 Route::delete('/home/delete/{id}', [TaskManagerController::class, 'done'])->name('doneTask');

@@ -13,16 +13,18 @@ class TaskManagerController extends Controller
         $task = Task::orderBy('created_at')->with('image')->get();
         //menampilkan list tugas dikelompokkan berdasar status dan disort berdasarkan statusnya
         $task = $task->sortBy('status')->groupBy('status_id');
-        //mengurutkan list tugas status done berdasarkan tanggal terhapus
+        //mengurutkan list tugas status done berdasarkan tanggal terhapus (sorting by deleted time) optional
         $task=$task->sortBy('deleted_at');
-        //setiap tugas ada link untuk update dan delete
+        // dd($task);
+        // returning to home with data task
         return view("home", ['datas' => $task]);
     }
     function newTask(){
-
+        // return "MANTAP!";
+        return view("create");
     }
     function create(){
-
+        // return "MANTAP!";
     }
     function show(){
 
@@ -31,6 +33,7 @@ class TaskManagerController extends Controller
 
     }
     function done($id){
+        // add delete stamp
         return 'mantap jiwa id: '.$id;
     }
     // function destroy(){
