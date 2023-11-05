@@ -10,23 +10,36 @@ use Illuminate\Http\Request;
 
 class TaskManagerController extends Controller
 {
-    //
-    function index(){
-        // menampilkan list tugas diurut berdasar tanggal tugas
-        $task = Task::orderBy('created_at')->with('image')->get();
-        //menampilkan list tugas dikelompokkan berdasar status dan disort berdasarkan statusnya
-        $task = $task->sortBy('status')->groupBy('status_id');
-        //mengurutkan list tugas status done berdasarkan tanggal terhapus (sorting by deleted time) optional
-        $task=$task->sortBy('published_at');
-        // dd($task);
+    function index(Request $request){
+        // mengubah data berdasarkan request status
+        if(isset($request->status)){
+            $statuses = ['draft', 'published', 'validated', 'done', 'user'];
+            $status_id=array_search($request->status, $statuses);
+            if($status_id == 4){
+                $user = User::all();
+                $datas = $user->forget(0);
+            }
+            else{
+                $datas = Task::all()->where("status_id","=", $status_id);
+            }
+            $datas = collect([$status_id=>$datas]);
+        }
+        // secara default
+        else{
+            // menampilkan list tugas diurut berdasar tanggal tugas
+            $task = Task::orderBy('created_at')->with('image')->get();
+            //menampilkan list tugas dikelompokkan berdasar status dan disort berdasarkan statusnya
+            $task = $task->sortBy('status')->groupBy('status_id');
+            //mengurutkan list tugas status done berdasarkan tanggal terhapus (sorting by deleted time) optional
+            $datas = $task->sortBy('published_at');
+        }
         // returning to home with data task
-        return view("home", ['datas' => $task]);
+        return view("home", ['datas' => $datas]);
     }
     function newTask(){
         $user = User::all();
         $image = Image::all();
         $user_without_admin = $user->forget(0);
-        // dd($user_without_admin);
         return view("create", ['users' => $user_without_admin, 'images' =>$image]);
     }
     function create(Request $request) {
@@ -49,7 +62,6 @@ class TaskManagerController extends Controller
                 'title' => 'required',
                 'description'=>'required',
             ]);
-            // draft
             $status = 1;
             $published = null;
             $validated['user_id'] = null;
@@ -62,17 +74,15 @@ class TaskManagerController extends Controller
         Task::create($validated);
         return redirect()->route('homeScreen');
     }
-    function show(){
-
+    function show(Task $task){
+        return view("detail", ['datas' => $task]);
     }
     function edit(){
-
+        // editting
     }
-    function done($id){
-        // add delete stamp
-        return 'mantap jiwa id: '.$id;
+    function done(Task $task){
+        // softDelete
+        $task->delete();
+        return redirect()->route('homeScreen');
     }
-    // function destroy(){
-
-    // }
 }

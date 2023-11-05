@@ -7,13 +7,26 @@
 @extends('layout.mainLayout')
 
 @section('search')
-@parent
+    @parent
 @endsection
 
 @section('mainContent')
     <div class="text-center mt-3 mb-1 position-relative">
         <h3>Task List</h3>
-        <a class="position-absolute btn btn-primary d-inline top-0 end-0 me-3" href="{{ route('newTask') }}" role="button">New Task</a>
+        <a class="position-absolute btn btn-primary d-inline top-0 end-0 me-3" href="{{ route('newTask') }}" role="button">New
+            Task</a>
+        <div class="position-absolute top-0 start-0 ms-3">
+            <a class=" btn btn-primary d-inline"
+                href="{{ route('homeScreen') }}?status=draft" role="button">Draft</a>
+            <a class="btn btn-primary d-inline"
+                href="{{ route('homeScreen') }}?status=published" role="button">Published</a>
+            <a class="btn btn-primary d-inline"
+                href="{{ route('homeScreen') }}?status=validated" role="button">Validated</a>
+            <a class="btn btn-primary d-inline"
+                href="{{ route('homeScreen') }}?status=done" role="button">Done</a>
+            <a class="btn btn-primary d-inline"
+                href="{{ route('homeScreen') }}?status=user" role="button">Users</a>
+        </div>
     </div>
 
     <div>
@@ -32,7 +45,8 @@
                                 <div class="text-center">
                                     <a href="{{ route('editTask', ['id' => $item->id]) }}" class="btn btn-primary">Edit</a>
                                     {{-- <a href="" id="deleteButton" class="btn btn-primary">Delete</a> --}}
-                                    <button type="button" class="btn btn-primary" onclick="openModal({{ $item->id }})">Delete</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="openModal({{ $item->id }})">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -47,15 +61,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Delete Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close" onclick="closeModal()"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="closeModal()"></button>
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete?</p>
                 </div>
                 <div class="modal-footer">
-                    <a type="button" class="btn btn-secondary cancel"
-                        data-bs-dismiss="modal">Cancel</a>
+                    <a type="button" class="btn btn-secondary cancel" data-bs-dismiss="modal">Cancel</a>
                     <form id='deleteForm' action="" method="POST">
                         @csrf
                         @method('DELETE')
@@ -65,8 +78,4 @@
             </div>
         </div>
     </div>
-
 @endsection
-
-
-
