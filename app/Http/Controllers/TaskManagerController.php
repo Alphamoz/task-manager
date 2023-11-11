@@ -10,19 +10,23 @@ use Illuminate\Http\Request;
 
 class TaskManagerController extends Controller
 {
+    public function __construct(){
+        $this->middleware("auth");
+    }
     function index(Request $request){
         // mengubah data berdasarkan request status
         if(isset($request->status)){
             $statuses = ['draft', 'published', 'validated', 'done', 'user'];
-            $status_id=array_search($request->status, $statuses);
-            if($status_id == 4){
-                $user = User::all();
-                $datas = $user->forget(0);
+            $status_id=array_search($request->status, $statuses) +1;
+            if($status_id == 5){
+                $user = User::paginate(5)->withQueryString();;
+                $datas = $user;
             }
             else{
-                $datas = Task::all()->where("status_id","=", $status_id);
+                $datas = Task::where("status_id","=", $status_id)->paginate(5)->withQueryString();;
             }
             $datas = collect([$status_id=>$datas]);
+            $paginated = true;
         }
         // secara default
         else{
@@ -32,9 +36,11 @@ class TaskManagerController extends Controller
             $task = $task->sortBy('status')->groupBy('status_id');
             //mengurutkan list tugas status done berdasarkan tanggal terhapus (sorting by deleted time) optional
             $datas = $task->sortBy('published_at');
+            $paginated = false;
         }
         // returning to home with data task
-        return view("home", ['datas' => $datas]);
+        // dd($datas[1]);
+        return view("home", ['datas' => $datas, "paginated"=> $paginated]);
     }
     function newTask(){
         $user = User::all();
@@ -74,15 +80,49 @@ class TaskManagerController extends Controller
         Task::create($validated);
         return redirect()->route('homeScreen');
     }
-    function show(Task $task){
-        return view("detail", ['datas' => $task]);
+    function show($id){
+        $task = Task::with('user', 'image', 'status')->find($id);
+        // dd($task);
+        $user = User::all();
+        $image = Image::all();
+        $user_without_admin = $user->forget(0);
+        return view("edit", ['datas'=> $task, 'users' => $user_without_admin, 'images' =>$image]);
     }
-    function edit(){
+    function edit(Task $id, Request $request){
         // editting
+        if(!empty($request->user_id)){
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'image_id' => 'required',
+            'title' => 'required',
+            'description'=>'required',
+        ]);
+        // published
+        $status = 2;
+        $published = Carbon::now();
+        }
+        else{
+            $validated = $request->validate([
+                'image_id' => 'required',
+                'title' => 'required',
+                'description'=>'required',
+            ]);
+            $status = 1;
+            $published = null;
+            $validated['user_id'] = null;
+        }
+        $validated['status_id'] = $status;
+        $validated['published_at'] = $published;
+
+        // creating data at database
+        $id->update($validated);
+        return redirect()->route('homeScreen');
     }
-    function done(Task $task){
+    function done($id){
         // softDelete
-        $task->delete();
+        $task = Task::find($id);
+        $task->deleted_at=now();
+        $task->update();
         return redirect()->route('homeScreen');
     }
 }
