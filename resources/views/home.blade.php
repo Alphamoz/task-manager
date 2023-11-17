@@ -13,15 +13,26 @@
 @section('mainContent')
     <div class="text-center mt-3 mb-1 position-relative">
         <h1 class="h3">Task List</h1>
-        <a class="position-absolute btn btn-primary d-inline top-0 end-0 me-3" href="{{ route('newTask') }}" role="button">New
-            Task</a>
+        @if (Auth::user()->is_admin)
+            <a class="position-absolute btn btn-primary d-inline top-0 end-0 me-3" href="{{ route('newTask') }}"
+                role="button">New
+                Task</a>
+        @endif
         <div class="position-absolute top-3 start-0 ms-3">
-            <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=draft" role="button">Draft</a>
-            <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=published" role="button">Published</a>
+            @if (Auth::user()->is_admin)
+                <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=draft"
+                    role="button">Draft</a>
+            @endif
+            <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=published"
+                role="button">Published</a>
             <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=validated"
                 role="button">Validated</a>
-            <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=done" role="button">Done</a>
-            <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=user" role="button">Users</a>
+            @if (Auth::user()->is_admin)
+                <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=done"
+                    role="button">Done</a>
+                <a class="btn btn-outline-secondary d-inline" href="{{ route('homeScreen') }}?status=user"
+                    role="button">Users</a>
+            @endif
         </div>
     </div>
 
@@ -32,7 +43,15 @@
             <div class="row row-cols-1 row-cols-md-5 g-2 m-2">
                 @foreach ($items as $item)
                     @if ($statuses[$status_id - 1] == 'Users')
-                        {{ 'mantap' }}
+                    <div class="col">
+                        <div class="card h-100">
+                            {{-- {{ $item->image }} --}}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $item->name }}</h5>
+                                <p class="card-text">{{ Str::limit($item->email) }}</p>
+                            </div>
+                        </div>
+                    </div>
                     @else
                         <div class="col">
                             <div class="card h-100">
@@ -45,8 +64,10 @@
                                         <a href="{{ route('editTask', ['id' => $item->id]) }}"
                                             class="btn btn-primary">Edit</a>
                                         {{-- <a href="" id="deleteButton" class="btn btn-primary">Delete</a> --}}
-                                        <button type="submit" class="btn btn-outline-danger"
-                                            onclick="openModal({{ $item->id }})">Delete</button>
+                                        @if (Auth::user()->is_admin)
+                                            <button type="submit" class="btn btn-outline-danger"
+                                                onclick="openModal({{ $item->id }})">Delete</button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +106,6 @@
 
 @section('pagination')
     @if ($paginated)
-        <div class="d-flex justify-content-center mt-5"
-        >{{ $datas->first->links() }}</div>
+        <div class="d-flex justify-content-center mt-5">{{ $datas->first->links() }}</div>
     @endif
 @endsection
